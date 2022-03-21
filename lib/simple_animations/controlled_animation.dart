@@ -69,8 +69,8 @@ class ControlledAnimation<T> extends StatefulWidget {
   final Curve curve;
   final Duration duration;
   final Duration? delay;
-  final Widget Function(BuildContext buildContext, T animatedValue)? builder;
-  final Widget Function(BuildContext, Widget child, T animatedValue)?
+  final Widget? Function(BuildContext buildContext, T animatedValue)? builder;
+  final Widget? Function(BuildContext, Widget child, T animatedValue)?
       builderWithChild;
   final Widget? child;
   final AnimationStatusListener? animationControllerStatusListener;
@@ -178,9 +178,10 @@ class _ControlledAnimationState<T> extends State<ControlledAnimation<T>>
   @override
   Widget build(BuildContext context) {
     if (widget.builder != null) {
-      return widget.builder!(context, _animation.value);
+      return widget.builder!(context, _animation.value)!;
     } else if (widget.builderWithChild != null && widget.child != null) {
-      return widget.builderWithChild!(context, widget.child!, _animation.value);
+      return widget.builderWithChild!(
+          context, widget.child!, _animation.value)!;
     }
     return Container();
   }
