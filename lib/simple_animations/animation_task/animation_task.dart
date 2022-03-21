@@ -5,17 +5,17 @@ import 'package:simple_animations/simple_animations.dart';
 /// inside an [AnimationControllerX].
 abstract class AnimationTask {
   /// Time when task started
-  Duration startedTime;
+  Duration? startedTime;
 
   /// Value of [AnimationControllerX] when task started
-  double startedValue;
+  double? startedValue;
   bool _isCompleted = false;
 
   /// Callback fired when task starts
-  AnimationTaskCallback onStart;
+  AnimationTaskCallback? onStart;
 
   /// Callback fired when task completes
-  AnimationTaskCallback onComplete;
+  AnimationTaskCallback? onComplete;
 
   AnimationTask({this.onStart, this.onComplete});
 
@@ -23,16 +23,16 @@ abstract class AnimationTask {
   started(Duration time, double value) {
     startedTime = time;
     startedValue = value;
-    if (onStart != null) onStart();
+    if (onStart != null) onStart!();
   }
 
   /// Returns the new value of the animation
-  double computeValue(Duration time);
+  double? computeValue(Duration time);
 
   /// Called by [computeValue] when task completes.
   completeTask() {
     _isCompleted = true;
-    if (onComplete != null) onComplete();
+    if (onComplete != null) onComplete!();
   }
 
   /// Returns whether the task is completed

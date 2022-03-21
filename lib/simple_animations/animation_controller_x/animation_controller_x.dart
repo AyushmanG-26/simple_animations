@@ -39,24 +39,25 @@ class AnimationControllerX extends Animation<double>
         AnimationEagerListenerMixin,
         AnimationLocalListenersMixin,
         AnimationLocalStatusListenersMixin {
-  Ticker _ticker;
-  StatusChangeCallback onStatusChange;
+  Ticker? _ticker;
+  StatusChangeCallback? onStatusChange;
 
-  AnimationTask _currentTask;
+  AnimationTask? _currentTask;
   List<AnimationTask> _tasks = [];
 
-  AnimationControllerX({TickerProvider vsync, this.onStatusChange}) {
+  AnimationControllerX({
+    TickerProvider? vsync,
+    this.onStatusChange,
+  }) {
     if (vsync != null) {
       configureVsync(vsync);
     }
   }
 
   /// Configures controller to a [TickerProvider].
-  void configureVsync(TickerProvider vsync) {
-    assert(_ticker == null, "Vsync is already configured.");
-    assert(vsync != null, "Expected to provide a 'vsync'.");
-    _ticker = vsync.createTicker(_tick);
-    _ticker.start();
+  void configureVsync(TickerProvider? vsync) {
+    _ticker = vsync!.createTicker(_tick);
+    _ticker!.start();
   }
 
   void _tick(Duration time) {
@@ -70,25 +71,25 @@ class AnimationControllerX extends Animation<double>
 
     _computeValue(time);
 
-    if (_currentTask.isCompleted()) {
+    if (_currentTask!.isCompleted()) {
       _completeCurrentTask();
     }
   }
 
   void _createNewTask(Duration time) {
     _currentTask = _tasks.removeAt(0);
-    _currentTask.started(time, _value);
+    _currentTask!.started(time, _value);
     if (onStatusChange != null) {
-      onStatusChange(AnimationControllerXStatus.startTask, _currentTask);
+      onStatusChange!(AnimationControllerXStatus.startTask, _currentTask!);
     }
   }
 
   void _computeValue(Duration time) {
-    final newValue = _currentTask.computeValue(time);
+    final newValue = _currentTask!.computeValue(time);
     assert(newValue != null,
         "Value passed from 'computeValue' method must be non null.");
     if (newValue != _value) {
-      _updateStatusOnNewValue(_value, newValue);
+      _updateStatusOnNewValue(_value, newValue!);
       _value = newValue;
       notifyListeners();
     }
@@ -97,14 +98,14 @@ class AnimationControllerX extends Animation<double>
   void _completeCurrentTask() {
     _updateStatusOnTaskComplete();
     if (onStatusChange != null) {
-      onStatusChange(AnimationControllerXStatus.completeTask, _currentTask);
+      onStatusChange!(AnimationControllerXStatus.completeTask, _currentTask!);
     }
-    _currentTask.dispose();
+    _currentTask!.dispose();
     _currentTask = null;
   }
 
   dispose() {
-    _ticker.dispose();
+    _ticker!.dispose();
     super.dispose();
   }
 
@@ -132,7 +133,7 @@ class AnimationControllerX extends Animation<double>
 
   /// Returns a copy of the internal task queue.
   List<AnimationTask> get tasks =>
-      [if (_currentTask != null) _currentTask, ..._tasks];
+      [if (_currentTask != null) _currentTask!, ..._tasks];
 
   /// Stops and clears the task queue.
   void stop() {
@@ -143,7 +144,7 @@ class AnimationControllerX extends Animation<double>
   /// it will continue to process the next task.
   void forceCompleteCurrentTask() {
     if (_currentTask != null) {
-      _currentTask.completeTask();
+      _currentTask!.completeTask();
     } else if (_tasks.isNotEmpty) {
       _tasks.removeAt(0);
     }
@@ -151,10 +152,10 @@ class AnimationControllerX extends Animation<double>
 
   /// Clears the current task queue and (optionally) continues to process
   /// tasks provided by the [tasksToExecuteAfterReset] parameter.
-  void reset([List<AnimationTask> tasksToExecuteAfterReset]) {
+  void reset([List<AnimationTask>? tasksToExecuteAfterReset]) {
     _tasks.clear();
     if (_currentTask != null) {
-      _currentTask.dispose();
+      _currentTask!.dispose();
       _currentTask = null;
     }
 

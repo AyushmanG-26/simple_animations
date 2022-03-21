@@ -18,12 +18,12 @@ import 'package:flutter/widgets.dart';
 /// [startTimeSimulationTicks] property.)
 class Rendering extends StatefulWidget {
   final Widget Function(BuildContext context, Duration timeElapsed) builder;
-  final Function(Duration timeElapsed) onTick;
+  final Function(Duration timeElapsed)? onTick;
   final Duration startTime;
   final int startTimeSimulationTicks;
 
   Rendering(
-      {this.builder,
+      {required this.builder,
       this.onTick,
       this.startTime = Duration.zero,
       this.startTimeSimulationTicks = 20})
@@ -35,7 +35,7 @@ class Rendering extends StatefulWidget {
 
 class _RenderingState extends State<Rendering>
     with SingleTickerProviderStateMixin {
-  Ticker _ticker;
+  Ticker? _ticker;
   Duration _timeElapsed = Duration(milliseconds: 0);
 
   @override
@@ -47,13 +47,13 @@ class _RenderingState extends State<Rendering>
     _ticker = createTicker((elapsed) {
       _onRender(elapsed + widget.startTime);
     });
-    _ticker.start();
+    _ticker?.start();
     super.initState();
   }
 
   void _onRender(Duration effectiveElapsed) {
     if (widget.onTick != null) {
-      widget.onTick(effectiveElapsed);
+      widget.onTick!(effectiveElapsed);
     }
     setState(() {
       _timeElapsed = effectiveElapsed;
@@ -68,14 +68,14 @@ class _RenderingState extends State<Rendering>
                     i /
                     widget.startTimeSimulationTicks)
                 .round());
-        widget.onTick(simulatedTime);
+        widget.onTick!(simulatedTime);
       });
     }
   }
 
   @override
   void dispose() {
-    _ticker.stop(canceled: true);
+    _ticker?.stop(canceled: true);
     super.dispose();
   }
 

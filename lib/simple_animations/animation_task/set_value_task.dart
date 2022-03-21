@@ -9,11 +9,10 @@ class SetValueTask extends AnimationTask {
   final double value;
 
   SetValueTask({
-    @required this.value,
-    AnimationTaskCallback onStart,
-    AnimationTaskCallback onComplete,
-  })  : assert(value != null, "Please provide a 'value'."),
-        super(onStart: onStart, onComplete: onComplete);
+    required this.value,
+    AnimationTaskCallback? onStart,
+    AnimationTaskCallback? onComplete,
+  }) : super(onStart: onStart, onComplete: onComplete);
 
   @override
   double computeValue(Duration time) {

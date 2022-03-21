@@ -25,7 +25,7 @@ class FromToTask extends AnimationTask {
   /// Double value between `0.0` and `1.0` that indicates the start position of
   /// the animation. If it's not set the task will refer to the current position
   /// of the animation.
-  double from;
+  double? from;
 
   /// Double value between `0.0` and `1.0` that indicates the end position of
   /// the animation.
@@ -36,20 +36,18 @@ class FromToTask extends AnimationTask {
 
   /// Creates a new task that animate from a certain value to a another value.
   FromToTask({
-    @required this.duration,
-    @required this.to,
+    required this.duration,
+    required this.to,
     this.durationBasedOnZeroToOneInterval = true,
-    this.from,
+    this.from = 0.0,
     this.curve = Curves.linear,
-    AnimationTaskCallback onStart,
-    AnimationTaskCallback onComplete,
-  })  : assert(to != null, "Please provide a 'to' value to animate to."),
-        assert(duration != null, "Please provide a 'duration'."),
-        super(onStart: onStart, onComplete: onComplete);
+    AnimationTaskCallback? onStart,
+    AnimationTaskCallback? onComplete,
+  }) : super(onStart: onStart, onComplete: onComplete);
 
   @override
   double computeValue(Duration time) {
-    final fromValue = (from == null ? startedValue : from).clamp(0.0, 1.0);
+    final fromValue = (from == null ? startedValue : from)!.clamp(0.0, 1.0);
     final toValue = to.clamp(0.0, 1.0).toDouble();
     final delta = (toValue - fromValue).abs();
     final durationMillis = durationBasedOnZeroToOneInterval
@@ -61,7 +59,7 @@ class FromToTask extends AnimationTask {
     if (durationMillis == 0) {
       value = toValue;
     } else {
-      final timePassed = time - startedTime;
+      final timePassed = time - startedTime!;
       final progress = timePassed.inMilliseconds / durationMillis;
       final linearValue = (fromValue * (1 - progress) + progress * toValue)
           .clamp(min(fromValue, toValue), max(fromValue, toValue))

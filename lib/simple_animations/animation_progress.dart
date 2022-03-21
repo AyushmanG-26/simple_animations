@@ -11,10 +11,7 @@ class AnimationProgress {
   final Duration startTime;
 
   /// Creates an [AnimationProgress].
-  AnimationProgress({this.duration, this.startTime})
-      : assert(duration != null, "Please specify an animation duration."),
-        assert(
-            startTime != null, "Please specify a start time of the animation.");
+  AnimationProgress({required this.duration, required this.startTime});
 
   /// Queries the current progress value based on the specified [startTime] and
   /// [duration] as a value between `0.0` and `1.0`. It will automatically

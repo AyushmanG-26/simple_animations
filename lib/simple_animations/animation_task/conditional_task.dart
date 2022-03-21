@@ -11,9 +11,9 @@ class ConditionalTask extends AnimationTask {
   bool Function() predicate;
 
   ConditionalTask({
-    @required this.predicate,
-    AnimationTaskCallback onStart,
-    AnimationTaskCallback onComplete,
+    required this.predicate,
+    AnimationTaskCallback? onStart,
+    AnimationTaskCallback? onComplete,
   })  : assert(predicate != null, "Please provide a 'predicate'."),
         super(onStart: onStart, onComplete: onComplete);
 
@@ -23,7 +23,7 @@ class ConditionalTask extends AnimationTask {
       completeTask();
     }
 
-    return startedValue;
+    return startedValue!;
   }
 
   @override

@@ -8,19 +8,18 @@ class SleepTask extends AnimationTask {
   Duration duration;
 
   SleepTask({
-    @required this.duration,
-    AnimationTaskCallback onStart,
-    AnimationTaskCallback onComplete,
-  })  : assert(duration != null, "Please provide a 'duration'."),
-        super(onStart: onStart, onComplete: onComplete);
+    required this.duration,
+    AnimationTaskCallback? onStart,
+    AnimationTaskCallback? onComplete,
+  }) : super(onStart: onStart, onComplete: onComplete);
 
   @override
   double computeValue(Duration time) {
-    final timePassed = time - startedTime;
+    final timePassed = time - startedTime!;
     if (timePassed.inMilliseconds >= duration.inMilliseconds) {
       completeTask();
     }
-    return startedValue;
+    return startedValue!;
   }
 
   @override
